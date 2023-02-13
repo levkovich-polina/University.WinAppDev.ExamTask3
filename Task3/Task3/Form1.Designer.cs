@@ -31,8 +31,8 @@
             this.Panel = new System.Windows.Forms.Panel();
             this.LinesListBox = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.ColorButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.ColorDialog = new System.Windows.Forms.ColorDialog();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -56,6 +56,7 @@
             this.LinesListBox.Name = "LinesListBox";
             this.LinesListBox.Size = new System.Drawing.Size(234, 344);
             this.LinesListBox.TabIndex = 1;
+            this.LinesListBox.SelectedIndexChanged += new System.EventHandler(this.LinesListBox_SelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -68,15 +69,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Свойства панели";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 44);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Выбор цвета";
-            // 
             // ColorButton
             // 
             this.ColorButton.Location = new System.Drawing.Point(138, 26);
@@ -85,6 +77,15 @@
             this.ColorButton.TabIndex = 1;
             this.ColorButton.UseVisualStyleBackColor = true;
             this.ColorButton.Click += new System.EventHandler(this.ColorButton_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(22, 44);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(99, 20);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Выбор цвета";
             // 
             // Form1
             // 

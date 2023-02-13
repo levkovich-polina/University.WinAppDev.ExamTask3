@@ -1,27 +1,23 @@
-using System.Collections.Generic;
-using System.Drawing;
-using System.Reflection;
-
 namespace Task3
 {
     public partial class Form1 : Form
     {
         Random _random = new Random();
 
-        Pen _reproductionColor;
-        Pen _newColor;
+        Pen _pen;
+        Color _lineColor;
         List<Point> _points = new List<Point>();
-        class Lines 
+        class Lines
         {
-            public List<Point> LinePoints = new List<Point>(); 
-            public Pen Color;            
-            public Lines(List<Point> _points, Pen color)
+            public List<Point> LinePoints = new List<Point>();
+            public Color PenColor;
+            public Lines(List<Point> _points, Color color)
             {
                 for (int i = 0; i < _points.Count; i++)
                 {
                     LinePoints.Add(_points[i]);
                 }
-                Color = color;
+                PenColor = color;
             }
         }
         List<Lines> _lines = new List<Lines>(); // Массив всех линий, нарисованных на панели
@@ -34,10 +30,17 @@ namespace Task3
 
         private void ColorButton_Click(object sender, EventArgs e)
         {
+            Graphics g = Panel.CreateGraphics();
             if (ColorDialog.ShowDialog() == DialogResult.OK)
             {
-                _newColor = new Pen(ColorDialog.Color, 10);
-                ColorButton.BackColor = _newColor.Color;
+                ColorButton.BackColor = ColorDialog.Color;
+                _lines[LinesListBox.SelectedIndex].PenColor = ColorDialog.Color;
+                Pen newpen = new Pen(ColorDialog.Color, 10);
+                for (int i = 1; i < _lines[LinesListBox.SelectedIndex].LinePoints.Count; i++)
+                {
+                    g.DrawLine(new Pen(Color.White, 20), _lines[LinesListBox.SelectedIndex].LinePoints[i - 1], _lines[LinesListBox.SelectedIndex].LinePoints[i]);
+                    g.DrawLine(newpen, _lines[LinesListBox.SelectedIndex].LinePoints[i - 1], _lines[LinesListBox.SelectedIndex].LinePoints[i]);
+                }
             }
         }
 
@@ -46,7 +49,7 @@ namespace Task3
             if (e.Button == MouseButtons.Left)
             {
                 Panel.Capture = true;
-                _reproductionColor = new Pen(Color.FromArgb(_random.Next(255), _random.Next(255), _random.Next(255), _random.Next(255)), 10);
+                _lineColor = Color.FromArgb(_random.Next(255), _random.Next(255), _random.Next(255), _random.Next(255));
             }
         }
 
@@ -55,9 +58,10 @@ namespace Task3
             if (e.Button == MouseButtons.Left)
             {
                 Panel.Capture = false;
-                _lines.Add(new Lines(_points, _reproductionColor)); 
-                count++; 
-                LinesListBox.Items.Add("Фигура " + count); 
+
+                _lines.Add(new Lines(_points, _lineColor));
+                count++;
+                LinesListBox.Items.Add("Фигура " + count);
                 _points.Clear();
             }
         }
@@ -67,12 +71,26 @@ namespace Task3
             if (Panel.Capture)
             {
                 _points.Add(new Point(e.X, e.Y));
+                _pen = new Pen(_lineColor, 10);
+
                 if (_points.Count >= 2)
                 {
                     Graphics g = Panel.CreateGraphics();
-                    g.DrawLine(_reproductionColor, _points[_points.Count - 2], _points[_points.Count - 1]);
+                    g.DrawLine(_pen, _points[_points.Count - 2], _points[_points.Count - 1]);
                 }
             }
+        }
+
+        private void LinesListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Graphics g = Panel.CreateGraphics();
+            ColorButton.BackColor = _lines[LinesListBox.SelectedIndex].PenColor;
+            ColorButton.Enabled = true;
+            for (int i = 1; i < _lines[LinesListBox.SelectedIndex].LinePoints.Count; i++)
+            {
+                g.DrawLine(new Pen(_lineColor,20), _lines[LinesListBox.SelectedIndex].LinePoints[i - 1], _lines[LinesListBox.SelectedIndex].LinePoints[i]);
+            }
+
         }
     }
 }
