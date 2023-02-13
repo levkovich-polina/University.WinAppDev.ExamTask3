@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 
 namespace Task3
 {
@@ -9,20 +10,22 @@ namespace Task3
 
         Pen _reproductionColor;
         Pen _newColor;
-        List<Point> _point = new List<Point>();
+        List<Point> _points = new List<Point>();
         class Lines 
         {
-            public List<Point> LinePoint = new List<Point>(); 
-            public Color Color;            
-            public Lines(List<Point> _point, Color color)
+            public List<Point> LinePoints = new List<Point>(); 
+            public Pen Color;            
+            public Lines(List<Point> _points, Pen color)
             {
-                for (int i = 0; i < _point.Count; i++)
+                for (int i = 0; i < _points.Count; i++)
                 {
-                    LinePoint.Add(_point[i]);
+                    LinePoints.Add(_points[i]);
                 }
                 Color = color;
             }
         }
+        List<Lines> _lines = new List<Lines>(); // Массив всех линий, нарисованных на панели
+        int count = 0;
         public Form1()
         {
             InitializeComponent();
@@ -52,7 +55,10 @@ namespace Task3
             if (e.Button == MouseButtons.Left)
             {
                 Panel.Capture = false;
-                _point.Clear();
+                _lines.Add(new Lines(_points, _reproductionColor)); 
+                count++; 
+                LinesListBox.Items.Add("Фигура " + count); 
+                _points.Clear();
             }
         }
 
@@ -60,11 +66,11 @@ namespace Task3
         {
             if (Panel.Capture)
             {
-                _point.Add(new Point(e.X, e.Y));
-                if (_point.Count >= 2)
+                _points.Add(new Point(e.X, e.Y));
+                if (_points.Count >= 2)
                 {
                     Graphics g = Panel.CreateGraphics();
-                    g.DrawLine(_reproductionColor, _point[_point.Count - 2], _point[_point.Count - 1]);
+                    g.DrawLine(_reproductionColor, _points[_points.Count - 2], _points[_points.Count - 1]);
                 }
             }
         }
